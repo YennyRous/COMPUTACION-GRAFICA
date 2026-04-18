@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Gráfico dinámico cartesiano</title>
+</head>
+<body>
+
+<h2>GRAFICO DE LINEA DINAMICA DESARROLLADO POR : YENNY CAMACHO</h2>
+
+<canvas id="canvas" width="700" height="500" style="border:1px solid black;"></canvas>
+
+<script>
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+const centroX = canvas.width / 2;
+const centroY = canvas.height / 2;
+
+const escalaX = 40;
+const escalaY = 100;
+
+let time = 0;
+
+// dibujar ejes cartesianos
+function dibujarEjes() {
+  ctx.beginPath();
+
+  // eje X
+  ctx.moveTo(0, centroY);
+  ctx.lineTo(canvas.width, centroY);
+
+  // eje Y
+  ctx.moveTo(centroX, 0);
+  ctx.lineTo(centroX, canvas.height);
+
+  ctx.strokeStyle = "gray";
+  ctx.lineWidth = 1;
+  ctx.stroke();
+}
+
+// dibujar función seno
+function dibujarFuncion() {
+  ctx.beginPath();
+
+  for (let x = -centroX; x < centroX; x++) {
+
+    let valorX = x / escalaX;
+    let y = Math.sin(valorX + time);
+
+    let canvasX = centroX + x;
+    let canvasY = centroY - y * escalaY;
+
+    if (x === -centroX) {
+      ctx.moveTo(canvasX, canvasY);
+    } else {
+      ctx.lineTo(canvasX, canvasY);
+    }
+  }
+
+  ctx.strokeStyle = "green";
+  ctx.lineWidth = 2;
+  ctx.stroke();
+}
+
+// animación
+function animar() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  dibujarEjes();
+  dibujarFuncion();
+
+  time += 0.05;
+
+  requestAnimationFrame(animar);
+}
+
+animar();
+</script>
+
+</body>
+</html>
