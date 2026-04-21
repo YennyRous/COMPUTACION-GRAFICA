@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Barras Dinámicas</title>
+
+<style>
+body{
+    font-family: Arial;
+    text-align: center;
+}
+
+#grafico{
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    height: 350px;
+    gap: 20px;
+}
+
+.barra{
+    width: 60px;
+    background: red;
+    transition: height 0.5s;
+}
+</style>
+
+</head>
+<body>
+
+<h2>Gráfico de Barras Dinámico</h2>
+
+<div id="grafico"></div>
+
+<script>
+
+const contenedor = document.getElementById("grafico");
+let barras = [];
+
+// Crear barras
+for(let i=0; i<5; i++){
+    let barra = document.createElement("div");
+    barra.classList.add("barra");
+    contenedor.appendChild(barra);
+    barras.push(barra);
+}
+
+// Actualizar valores
+function actualizar(){
+    barras.forEach(barra => {
+        let valor = Math.floor(Math.random() * 91) + 10;
+        barra.style.height = valor * 3 + "px";
+    });
+}
+
+setInterval(actualizar, 1000);
+
+</script>
+
+</body>
+</html>

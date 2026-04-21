@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Puntos con Ejes</title>
+
+<style>
+body{
+    text-align: center;
+    font-family: Arial;
+}
+
+canvas{
+    border: 1px solid black;
+}
+</style>
+
+</head>
+<body>
+
+<h2>Puntos en Movimiento con Ejes</h2>
+
+<canvas id="canvas" width="600" height="400"></canvas>
+
+<script>
+
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+let puntos = [];
+
+// Crear puntos
+for(let i=0; i<5; i++){
+    puntos.push({
+        x: Math.random() * 600,
+        y: Math.random() * 400
+    });
+}
+
+// Dibujar ejes
+function dibujarEjes(){
+    ctx.beginPath();
+
+    // eje X
+    ctx.moveTo(0, 200);
+    ctx.lineTo(600, 200);
+
+    // eje Y
+    ctx.moveTo(300, 0);
+    ctx.lineTo(300, 400);
+
+    ctx.strokeStyle = "black";
+    ctx.stroke();
+}
+
+// Dibujar puntos
+function dibujar(){
+    ctx.clearRect(0, 0, 600, 400);
+
+    dibujarEjes();
+
+    puntos.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 6, 0, Math.PI * 2);
+        ctx.fillStyle = "red";
+        ctx.fill();
+    });
+}
+
+// Mover puntos
+function mover(){
+    puntos = puntos.map(p => ({
+        x: Math.random() * 600,
+        y: Math.random() * 400
+    }));
+
+    dibujar();
+}
+
+setInterval(mover, 1000);
+
+</script>
+
+</body>
+</html>
