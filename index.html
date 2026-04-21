@@ -1,82 +1,125 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Gráfico dinámico cartesiano</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Computación Gráfica - Yenny Camacho</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f6f9;
+        }
+
+        /* HEADER */
+        header {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            text-align: center;
+            padding: 30px 10px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        header p {
+            margin-top: 10px;
+            font-size: 16px;
+        }
+
+        /* CONTENIDO */
+        .contenedor {
+            padding: 30px;
+            text-align: center;
+        }
+
+        .contenedor h2 {
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0px 6px 15px rgba(0,0,0,0.2);
+        }
+
+        .card a {
+            text-decoration: none;
+            color: #3498db;
+            font-weight: bold;
+        }
+
+        /* FOOTER */
+        footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            margin-top: 30px;
+        }
+    </style>
 </head>
+
 <body>
 
-<h2>GRAFICO DE LINEA DINAMICA DESARROLLADO POR : YENNY CAMACHO</h2>
+    <!-- ENCABEZADO -->
+    <header>
+        <h1>Computación Gráfica</h1>
+        <p>Repositorio de ejercicios prácticos</p>
+    </header>
 
-<canvas id="canvas" width="700" height="500" style="border:1px solid black;"></canvas>
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="contenedor">
+        <h2>Ejercicios desarrollados</h2>
 
-<script>
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
+        <div class="grid">
 
-const centroX = canvas.width / 2;
-const centroY = canvas.height / 2;
+            <div class="card">
+                <p>Gráfico de Líneas Dinámico</p>
+                <a href="2lineasdinamicas.html" target="_blank">Ver ejercicio</a>
+            </div>
 
-const escalaX = 40;
-const escalaY = 100;
+            <div class="card">
+                <p>Gráfico de Barras Dinámicas</p>
+                <a href="BARRASDINAMICAS.HTML" target="_blank">Ver ejercicio</a>
+            </div>
 
-let time = 0;
+            <div class="card">
+                <p>Curva Dinámica Coseno</p>
+                <a href="CURVADINAMICACOSENO.HTML" target="_blank">Ver ejercicio</a>
+            </div>
 
-// dibujar ejes cartesianos
-function dibujarEjes() {
-  ctx.beginPath();
+            <div class="card">
+                <p>Puntos en Movimiento</p>
+                <a href="PUNTOSENMOVIMIENTO.HTML" target="_blank">Ver ejercicio</a>
+            </div>
 
-  // eje X
-  ctx.moveTo(0, centroY);
-  ctx.lineTo(canvas.width, centroY);
+        </div>
+    </div>
 
-  // eje Y
-  ctx.moveTo(centroX, 0);
-  ctx.lineTo(centroX, canvas.height);
-
-  ctx.strokeStyle = "gray";
-  ctx.lineWidth = 1;
-  ctx.stroke();
-}
-
-// dibujar función seno
-function dibujarFuncion() {
-  ctx.beginPath();
-
-  for (let x = -centroX; x < centroX; x++) {
-
-    let valorX = x / escalaX;
-    let y = Math.sin(valorX + time);
-
-    let canvasX = centroX + x;
-    let canvasY = centroY - y * escalaY;
-
-    if (x === -centroX) {
-      ctx.moveTo(canvasX, canvasY);
-    } else {
-      ctx.lineTo(canvasX, canvasY);
-    }
-  }
-
-  ctx.strokeStyle = "green";
-  ctx.lineWidth = 2;
-  ctx.stroke();
-}
-
-// animación
-function animar() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  dibujarEjes();
-  dibujarFuncion();
-
-  time += 0.05;
-
-  requestAnimationFrame(animar);
-}
-
-animar();
-</script>
+    <!-- PIE DE PÁGINA -->
+    <footer>
+        <p><strong>Nombre:</strong> Yenny Camacho Rodríguez</p>
+        <p><strong>Curso:</strong> Computación Gráfica</p>
+        <p><strong>Año:</strong> 2026</p>
+    </footer>
 
 </body>
 </html>
