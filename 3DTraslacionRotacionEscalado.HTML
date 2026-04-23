@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Propuesta 3: Transformaciones 3D</title>
+
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: black;
+    }
+
+    #titulo {
+      position: absolute;
+      top: 10px;
+      width: 100%;
+      text-align: center;
+      z-index: 10;
+    }
+
+    #titulo span {
+      background: white;
+      color: black;
+      padding: 10px 20px;
+      font-family: Arial;
+      font-size: 16px;
+      border: 2px solid black;
+      display: inline-block;
+    }
+
+    #info {
+      position: absolute;
+      top: 60px;
+      left: 10px;
+      background: white;
+      color: black;
+      padding: 10px;
+      font-family: Arial;
+      font-size: 14px;
+      border: 2px solid black;
+      z-index: 10;
+    }
+  </style>
+</head>
+<body tabindex="0">
+
+<div id="titulo">
+  <span>
+    Propuesta 3: Aplicación integrada de traslación, rotación y escalado en un objeto tridimensional
+  </span>
+</div>
+
+<div id="info">
+<b>Controles:</b><br>
+W/S → mover Y<br>
+A/D → mover X<br>
+↑/↓ → mover Z<br>
+Q/E → rotar<br>
+Z/X → escalar
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
+
+<script>
+const scene = new THREE.Scene();
+
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+camera.position.z = 6;
+
+const renderer = new THREE.WebGLRenderer();
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
+
+// cubo
+const geometry = new THREE.BoxGeometry(2,2,2);
+
+const materials = [
+  new THREE.MeshBasicMaterial({ color: 0xff0000 }),
+  new THREE.MeshBasicMaterial({ color: 0x00ff00 }),
+  new THREE.MeshBasicMaterial({ color: 0x0000ff }),
+  new THREE.MeshBasicMaterial({ color: 0xffff00 }),
+  new THREE.MeshBasicMaterial({ color: 0xff00ff }),
+  new THREE.MeshBasicMaterial({ color: 0x00ffff })
+];
+
+const cube = new THREE.Mesh(geometry, materials);
+scene.add(cube);
+
+// teclado continuo
+const keys = {};
+
+document.addEventListener("keydown", e => keys[e.key.toLowerCase()] = true);
+document.addEventListener("keyup", e => keys[e.key.toLowerCase()] = false);
+
+document.body.focus();
+
+function animate() {
+  requestAnimationFrame(animate);
+
+  if (keys["a"]) cube.position.x -= 0.1;
+  if (keys["d"]) cube.position.x += 0.1;
+  if (keys["w"]) cube.position.y += 0.1;
+  if (keys["s"]) cube.position.y -= 0.1;
+
+  if (keys["arrowup"]) cube.position.z -= 0.1;
+  if (keys["arrowdown"]) cube.position.z += 0.1;
+
+  if (keys["q"]) cube.rotation.y -= 0.05;
+  if (keys["e"]) cube.rotation.y += 0.05;
+
+  if (keys["z"]) cube.scale.multiplyScalar(0.98);
+  if (keys["x"]) cube.scale.multiplyScalar(1.02);
+
+  renderer.render(scene, camera);
+}
+
+animate();
+</script>
+
+</body>
+</html>
