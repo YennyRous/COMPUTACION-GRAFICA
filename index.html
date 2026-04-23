@@ -22,7 +22,7 @@
 
         header h1 {
             margin: 0;
-            font-size: 28px;
+            font-size: 30px;
         }
 
         header p {
@@ -36,9 +36,16 @@
             text-align: center;
         }
 
-        .contenedor h2 {
-            margin-bottom: 20px;
+        .seccion {
+            margin-bottom: 40px;
+        }
+
+        .seccion h2 {
             color: #2c3e50;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #3498db;
+            display: inline-block;
+            padding-bottom: 5px;
         }
 
         .grid {
@@ -56,14 +63,24 @@
         }
 
         .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0px 6px 15px rgba(0,0,0,0.2);
+            transform: translateY(-6px);
+            box-shadow: 0px 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .card p {
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #2c3e50;
         }
 
         .card a {
             text-decoration: none;
             color: #3498db;
             font-weight: bold;
+        }
+
+        .card a:hover {
+            text-decoration: underline;
         }
 
         /* FOOTER */
@@ -82,39 +99,68 @@
     <!-- ENCABEZADO -->
     <header>
         <h1>Computación Gráfica</h1>
-        <p>Repositorio de ejercicios prácticos</p>
+        <p>Repositorio de ejercicios prácticos - Yenny Camacho</p>
     </header>
 
-    <!-- CONTENIDO PRINCIPAL -->
+    <!-- CONTENIDO -->
     <div class="contenedor">
-        <h2>Ejercicios desarrollados</h2>
 
-        <div class="grid">
+        <!-- SECCIÓN 2D -->
+        <div class="seccion">
+            <h2>Ejercicios 2D</h2>
 
-            <div class="card">
-                <p>Gráfico de Líneas Dinámico</p>
-                <a href="2lineasdinamicas.html" target="_blank">Ver ejercicio</a>
+            <div class="grid">
+
+                <div class="card">
+                    <p>Gráfico de Líneas Dinámico</p>
+                    <a href="2lineasdinamicas.html" target="_blank">Ver ejercicio</a>
+                </div>
+
+                <div class="card">
+                    <p>Gráfico de Barras Dinámicas</p>
+                    <a href="BARRASDINAMICAS.HTML" target="_blank">Ver ejercicio</a>
+                </div>
+
+                <div class="card">
+                    <p>Curva Dinámica Coseno</p>
+                    <a href="CURVADINAMICACOSENO.HTML" target="_blank">Ver ejercicio</a>
+                </div>
+
+                <div class="card">
+                    <p>Puntos en Movimiento</p>
+                    <a href="PUNTOSENMOVIMIENTO.HTML" target="_blank">Ver ejercicio</a>
+                </div>
+
             </div>
-
-            <div class="card">
-                <p>Gráfico de Barras Dinámicas</p>
-                <a href="BARRASDINAMICAS.HTML" target="_blank">Ver ejercicio</a>
-            </div>
-
-            <div class="card">
-                <p>Curva Dinámica Coseno</p>
-                <a href="CURVADINAMICACOSENO.HTML" target="_blank">Ver ejercicio</a>
-            </div>
-
-            <div class="card">
-                <p>Puntos en Movimiento</p>
-                <a href="PUNTOSENMOVIMIENTO.HTML" target="_blank">Ver ejercicio</a>
-            </div>
-
         </div>
+
+        <!-- SECCIÓN 3D -->
+        <div class="seccion">
+            <h2>Ejercicios 3D</h2>
+
+            <div class="grid">
+
+                <div class="card">
+                    <p>Traslación 3D de un Cubo</p>
+                    <a href="3DDesplazamientoLineaDeCubo.HTML" target="_blank">Ver ejercicio</a>
+                </div>
+
+                <div class="card">
+                    <p>Rotación 3D de un Cubo</p>
+                    <a href="3DRotacionTridimensional.HTML" target="_blank">Ver ejercicio</a>
+                </div>
+
+                <div class="card">
+                    <p>Transformaciones 3D Interactivas</p>
+                    <a href="3DTraslacionRotacionEscalado.HTML" target="_blank">Ver ejercicio</a>
+                </div>
+
+            </div>
+        </div>
+
     </div>
 
-    <!-- PIE DE PÁGINA -->
+    <!-- FOOTER -->
     <footer>
         <p><strong>Nombre:</strong> Yenny Camacho Rodríguez</p>
         <p><strong>Curso:</strong> Computación Gráfica</p>
