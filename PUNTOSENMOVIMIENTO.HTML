@@ -1,166 +1,85 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Portafolio | Yenny Camacho</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>Puntos con Ejes</title>
 
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            margin: 0;
-            background: #0f172a;
-            color: #fff;
-        }
+<style>
+body{
+    text-align: center;
+    font-family: Arial;
+}
 
-        header {
-            text-align: center;
-            padding: 40px 20px;
-            background: linear-gradient(135deg, #1e293b, #0f172a);
-        }
+canvas{
+    border: 1px solid black;
+}
+</style>
 
-        header img {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            border: 4px solid #38bdf8;
-            object-fit: cover;
-        }
-
-        header h1 {
-            margin: 15px 0 5px;
-            font-size: 28px;
-        }
-
-        header p {
-            color: #94a3b8;
-        }
-
-        section {
-            padding: 40px 20px;
-            max-width: 1000px;
-            margin: auto;
-        }
-
-        h2 {
-            border-left: 5px solid #38bdf8;
-            padding-left: 10px;
-            margin-bottom: 20px;
-        }
-
-        .card {
-            background: #1e293b;
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            transition: 0.3s;
-        }
-
-        .card:hover {
-            transform: scale(1.03);
-            box-shadow: 0 0 15px #38bdf8;
-        }
-
-        a {
-            color: #38bdf8;
-            text-decoration: none;
-        }
-
-        footer {
-            text-align: center;
-            padding: 20px;
-            background: #020617;
-            color: #64748b;
-        }
-    </style>
 </head>
-
 <body>
 
-<header>
-    <!-- CAMBIA EL NOMBRE DE LA IMAGEN SI ES NECESARIO -->
-    <img src="FOTO.jpg" alt="Foto Yenny Camacho">
-    <h1>Yenny Camacho Rodríguez</h1>
-    <p>Estudiante de Ingeniería | Universidad Tecnológica de los Andes</p>
-    <p>Noveno Semestre - Computación Gráfica</p>
-</header>
+<h2>Puntos en Movimiento con Ejes</h2>
 
-<section>
-    <h2>👩‍💻 Sobre mí</h2>
-    <div class="card">
-        <p>
-            Soy estudiante de la Universidad Tecnológica de los Andes, actualmente cursando el noveno semestre.
-            Me especializo en el desarrollo de proyectos de computación gráfica, aplicando conceptos como
-            transformaciones 2D y 3D, curvas paramétricas y modelado con mallas poligonales.
-        </p>
-    </div>
-</section>
+<canvas id="canvas" width="600" height="400"></canvas>
 
-<section>
-    <h2>📂 Proyectos</h2>
+<script>
 
-    <div class="card">
-        <h3>🔹 Líneas Dinámicas</h3>
-        <a href="2lineasdinamicas.html">Ver proyecto</a>
-    </div>
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
 
-    <div class="card">
-        <h3>🔹 Desplazamiento 3D</h3>
-        <a href="3DDesplazamientoLineaDeCubo.HTML">Ver proyecto</a>
-    </div>
+let puntos = [];
 
-    <div class="card">
-        <h3>🔹 Rotación 3D</h3>
-        <a href="3DRotacionTridimensional.HTML">Ver proyecto</a>
-    </div>
+// Crear puntos
+for(let i=0; i<5; i++){
+    puntos.push({
+        x: Math.random() * 600,
+        y: Math.random() * 400
+    });
+}
 
-    <div class="card">
-        <h3>🔹 Traslación, Rotación y Escalado</h3>
-        <a href="3DTraslacionRotacionEscalado.HTML">Ver proyecto</a>
-    </div>
+// Dibujar ejes
+function dibujarEjes(){
+    ctx.beginPath();
 
-    <div class="card">
-        <h3>🔹 Barras Dinámicas</h3>
-        <a href="BARRASDINAMICAS.HTML">Ver proyecto</a>
-    </div>
+    // eje X
+    ctx.moveTo(0, 200);
+    ctx.lineTo(600, 200);
 
-    <div class="card">
-        <h3>🔹 Curva Dinámica Coseno</h3>
-        <a href="CURVADINAMICACOSENO.HTML">Ver proyecto</a>
-    </div>
+    // eje Y
+    ctx.moveTo(300, 0);
+    ctx.lineTo(300, 400);
 
-    <div class="card">
-        <h3>🔹 Puntos en Movimiento</h3>
-        <a href="PUNTOSENMOVIMIENTO.HTML">Ver proyecto</a>
-    </div>
+    ctx.strokeStyle = "black";
+    ctx.stroke();
+}
 
-</section>
+// Dibujar puntos
+function dibujar(){
+    ctx.clearRect(0, 0, 600, 400);
 
-<section>
-    <h2>🚀 Actividad N° 6 (Último Proyecto)</h2>
+    dibujarEjes();
 
-    <div class="card">
-        <h3>📈 Curvas Paramétricas</h3>
-        <a href="CURVASPARAMETRICAS.HTML">Ver proyecto</a>
-    </div>
+    puntos.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 6, 0, Math.PI * 2);
+        ctx.fillStyle = "red";
+        ctx.fill();
+    });
+}
 
-    <div class="card">
-        <h3>🧊 Mallas Poligonales</h3>
-        <a href="MALLASPOLIGONALES.HTML">Ver proyecto</a>
-    </div>
+// Mover puntos
+function mover(){
+    puntos = puntos.map(p => ({
+        x: Math.random() * 600,
+        y: Math.random() * 400
+    }));
 
-    <div class="card">
-        <h3>📄 Documento Word</h3>
-        <p>Actividad N°6 (Informe)</p>
-        <!-- Cambia el nombre si tu archivo tiene otro -->
-        <a href="Actividad6.docx">Descargar documento</a>
-    </div>
+    dibujar();
+}
 
-</section>
+setInterval(mover, 1000);
 
-<footer>
-    <p>© 2026 - Portafolio de Computación Gráfica</p>
-</footer>
+</script>
 
 </body>
 </html>
