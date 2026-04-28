@@ -6,51 +6,86 @@
 <title>Esfera Wireframe</title>
 
 <style>
-    *{
-        margin:0;
-        padding:0;
-        box-sizing:border-box;
-    }
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
 
-    body{
-        overflow:hidden;
-        background:#ffffff;
-        font-family:Arial;
-    }
+body{
+    display:flex;
+    background:#ffffff;
+    font-family:Arial;
+}
 
-    h1{
-        position:absolute;
-        top:20px;
-        width:100%;
-        text-align:center;
-        color:#111;
-        z-index:100;
-        letter-spacing:2px;
-    }
+#canvas-container{
+    flex:2;
+}
 
-    .info{
-        position:absolute;
-        left:20px;
-        bottom:20px;
-        padding:15px;
-        border-radius:10px;
-        background:rgba(255,255,255,.85);
-        color:#111;
-        box-shadow:0 0 10px rgba(0,0,0,.15);
-        z-index:100;
-        line-height:1.7;
-    }
+#info-panel{
+    flex:1;
+    padding:20px;
+    background:#111;
+    color:#fff;
+    overflow-y:auto;
+}
+
+h2{
+    color:#00d8ff;
+}
+
+code{
+    color:#7CFC00;
+}
 </style>
 </head>
 <body>
 
-<h1>MALLA POLIGONAL ESFÉRICA</h1>
+<header style="position:fixed; top:0; left:0; width:100%; text-align:center; padding:15px; background:#111; color:#fff; z-index:200;">
+    <h1 style="margin:0; letter-spacing:2px;">MALLA POLIGONAL ESFÉRICA</h1>
+</header>
 
-<div class="info">
-    • Wireframe 3D<br>
-    • Rotación automática<br>
-    • Segmentación poligonal<br>
-    • Render WebGL
+<div style="height:70px;"></div>
+
+<button onclick="window.location.href='index.html'" 
+style="position:fixed; top:15px; left:20px; padding:10px 15px; border:none; border-radius:8px; background:#00d8ff; color:#000; font-weight:bold; cursor:pointer; z-index:300;">
+← VOLVER
+</button>
+
+<div id="canvas-container"></div>
+
+<div id="info-panel">
+    <h2>Explicación del código</h2>
+
+    <p><b>Librería utilizada:</b><br>
+    Se utiliza <code>Three.js</code>, una librería de JavaScript que permite crear gráficos 3D en el navegador mediante WebGL.</p>
+
+    <p><b>1. Escena:</b><br>
+    <code>THREE.Scene()</code> crea el espacio donde se renderizan los objetos.</p>
+
+    <p><b>2. Cámara:</b><br>
+    <code>PerspectiveCamera</code> define la perspectiva desde donde se visualiza la escena 3D.</p>
+
+    <p><b>3. Renderizador:</b><br>
+    <code>WebGLRenderer</code> se encarga de dibujar los gráficos en el navegador.</p>
+
+    <p><b>4. Geometría:</b><br>
+    <code>SphereGeometry</code> crea una esfera usando segmentos horizontales y verticales.</p>
+
+    <p><b>5. Wireframe:</b><br>
+    <code>WireframeGeometry</code> convierte la esfera en una malla de líneas (estructura poligonal).</p>
+
+    <p><b>6. Material:</b><br>
+    <code>LineBasicMaterial</code> define el color y apariencia de las líneas.</p>
+
+    <p><b>7. Objeto 3D:</b><br>
+    <code>LineSegments</code> une la geometría y el material para formar la esfera visible.</p>
+
+    <p><b>8. Animación:</b><br>
+    Se usa <code>requestAnimationFrame()</code> para rotar la esfera continuamente.</p>
+
+    <p><b>9. Responsive:</b><br>
+    Se ajusta automáticamente al tamaño de la pantalla cuando el usuario cambia el tamaño de la ventana.</p>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -72,14 +107,14 @@ camera.position.z = 5;
 const renderer = new THREE.WebGLRenderer({
     antialias:true
 });
-renderer.setSize(window.innerWidth,window.innerHeight);
-document.body.appendChild(renderer.domElement);
+renderer.setSize(window.innerWidth*0.66,window.innerHeight);
+document.getElementById("canvas-container").appendChild(renderer.domElement);
 
 // geometría esfera
 const geometry = new THREE.SphereGeometry(
-    2,   // radio
-    28,  // segmentos horizontales
-    28   // segmentos verticales
+    2,
+    28,
+    28
 );
 
 // wireframe
@@ -113,7 +148,7 @@ animate();
 window.addEventListener("resize",()=>{
     camera.aspect = window.innerWidth/window.innerHeight;
     camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth,window.innerHeight);
+    renderer.setSize(window.innerWidth*0.66,window.innerHeight);
 });
 </script>
 

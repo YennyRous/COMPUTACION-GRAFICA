@@ -4,10 +4,83 @@
 <meta charset="UTF-8">
 <title>Bézier 3D</title>
 <style>
-body { margin:0; overflow:hidden; background:black; }
+body { 
+  margin:0; 
+  display:flex; 
+  background:black; 
+  color:white;
+  font-family: Arial, sans-serif;
+}
+
+#canvas-container{
+  flex: 2;
+}
+
+#info{
+  flex: 1;
+  padding:20px;
+  background:#111;
+  overflow-y:auto;
+}
+
+h2{
+  color:#00d8ff;
+}
+
+code{
+  color:#7CFC00;
+}
 </style>
 </head>
 <body>
+
+<header style="position:fixed; top:0; left:0; width:100%; text-align:center; padding:15px; background:#111; color:#fff; z-index:200;">
+    <h1 style="margin:0; letter-spacing:2px;">CURVA DE BÉZIER 3D</h1>
+</header>
+
+<div style="height:70px;"></div>
+
+<button onclick="window.location.href='index.html'" 
+style="position:fixed; top:15px; left:20px; padding:10px 15px; border:none; border-radius:8px; background:#00d8ff; color:#000; font-weight:bold; cursor:pointer; z-index:300;">
+← VOLVER
+</button>
+
+<div id="canvas-container"></div>
+
+<div id="info">
+  <h2>Explicación del código</h2>
+
+  <p><b>Librería utilizada:</b><br>
+  Se utiliza la librería <code>Three.js</code>, una biblioteca de JavaScript que permite crear y renderizar gráficos 3D en el navegador usando WebGL.</p>
+
+  <p><b>1. Escena:</b><br>
+  Se crea una escena con <code>THREE.Scene()</code>, donde se agregan todos los objetos 3D.</p>
+
+  <p><b>2. Cámara:</b><br>
+  La cámara <code>PerspectiveCamera</code> define desde dónde se observa la escena.</p>
+
+  <p><b>3. Renderizador:</b><br>
+  <code>WebGLRenderer</code> dibuja los gráficos en el navegador.</p>
+
+  <p><b>4. Puntos de control:</b><br>
+  Se definen 4 puntos (<code>Vector3</code>) que forman la curva Bézier.</p>
+
+  <p><b>5. Curva Bézier:</b><br>
+  <code>CubicBezierCurve3</code> genera una curva suave usando los puntos.</p>
+
+  <p><b>6. Geometría:</b><br>
+  <code>getPoints()</code> obtiene puntos de la curva para dibujarla.</p>
+
+  <p><b>7. Línea:</b><br>
+  Se usa <code>THREE.Line</code> para mostrar la curva en pantalla.</p>
+
+  <p><b>8. Efecto de malla:</b><br>
+  Se crean múltiples líneas de colores conectando puntos opuestos de la curva.</p>
+
+  <p><b>9. Animación:</b><br>
+  <code>requestAnimationFrame()</code> permite rotar los objetos continuamente.</p>
+
+</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
@@ -16,8 +89,8 @@ const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer();
 
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
+renderer.setSize(window.innerWidth * 0.66, window.innerHeight);
+document.getElementById("canvas-container").appendChild(renderer.domElement);
 
 camera.position.z = 50;
 
