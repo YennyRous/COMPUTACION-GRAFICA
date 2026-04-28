@@ -12,29 +12,61 @@
     box-sizing:border-box;
 }
 
+/* ===== FONDO TIPO CIELO PASTEL ===== */
 body{
     font-family:'Segoe UI', sans-serif;
-    background: linear-gradient(135deg, #2e1065, #6d28d9, #ec4899);
-    color:white;
+    background: linear-gradient(
+        180deg,
+        #a5c9ff 0%,
+        #cdb4ff 30%,
+        #ffc8dd 65%,
+        #ffd6e0 100%
+    );
+    min-height:100vh;
+    color:#2d2d2d;
+    position:relative;
+    overflow-x:hidden;
 }
 
+/* Luz difusa tipo cielo */
+body::before{
+    content:"";
+    position:absolute;
+    width:600px;
+    height:600px;
+    background:radial-gradient(circle, rgba(255,255,255,0.5) 0%, transparent 70%);
+    top:10%;
+    left:50%;
+    transform:translateX(-50%);
+    filter:blur(40px);
+    z-index:0;
+}
+
+/* Asegura contenido encima */
+header, section, footer{
+    position:relative;
+    z-index:1;
+}
+
+/* ===== HEADER ===== */
 header{
     text-align:center;
     padding:60px 20px;
 }
 
 header img{
-    width:160px;
-    height:160px;
+    width:140px;
+    height:140px;
     border-radius:50%;
     border:4px solid #f9a8d4;
     object-fit:cover;
+    margin:10px;
     transition:0.4s;
 }
 
 header img:hover{
     transform:scale(1.08);
-    box-shadow:0 0 25px #f472b6;
+    box-shadow:0 0 25px rgba(244,114,182,0.6);
 }
 
 header h1{
@@ -43,9 +75,10 @@ header h1{
 }
 
 header p{
-    color:#fbcfe8;
+    color:#6b7280;
 }
 
+/* ===== SECCIONES ===== */
 section{
     max-width:1100px;
     margin:auto;
@@ -58,23 +91,26 @@ h2{
     padding-left:10px;
 }
 
+/* ===== GRID ===== */
 .grid{
     display:grid;
     grid-template-columns:repeat(auto-fit, minmax(250px,1fr));
     gap:20px;
 }
 
+/* ===== TARJETAS ===== */
 .card{
-    background: rgba(255,255,255,0.1);
-    backdrop-filter: blur(10px);
+    background: rgba(255,255,255,0.6);
+    backdrop-filter: blur(12px);
     padding:20px;
     border-radius:15px;
     transition:0.3s;
+    color:#1f2937;
 }
 
 .card:hover{
     transform:translateY(-8px);
-    box-shadow:0 10px 25px rgba(255,192,203,0.4);
+    box-shadow:0 10px 25px rgba(255,192,203,0.5);
 }
 
 .card h3{
@@ -86,7 +122,7 @@ h2{
     margin-top:10px;
     padding:8px 15px;
     background:#f472b6;
-    color:#000;
+    color:white;
     border-radius:8px;
     text-decoration:none;
     font-weight:bold;
@@ -96,18 +132,22 @@ h2{
     background:#ec4899;
 }
 
+/* ===== ACTIVIDADES ===== */
 .actividad{
     margin-top:30px;
     padding:20px;
     border-radius:15px;
-    background: rgba(0,0,0,0.2);
+    background: rgba(255,255,255,0.4);
+    backdrop-filter: blur(10px);
 }
 
+/* ===== FOOTER ===== */
 footer{
     text-align:center;
     padding:20px;
-    background:#1e1b4b;
-    color:#e9d5ff;
+    background: rgba(255,255,255,0.3);
+    color:#374151;
+    margin-top:40px;
 }
 </style>
 
@@ -118,6 +158,8 @@ footer{
 <header>
     <img src="FOTO.jpg.jpg" alt="Yenny Camacho">
     <img src="Logo-UTEA.png" alt="UTEA">
+    <img src="sistemas.jpg" alt="Sistemas">
+
     <h1>Yenny Camacho Rodríguez</h1>
     <p>Universidad Tecnológica de los Andes</p>
     <p>Computación Gráfica</p>
@@ -127,13 +169,12 @@ footer{
     <h2>👩‍💻 Sobre mí</h2>
     <div class="card">
         <p>
-        Soy estudiante de la Universidad Tecnológica de los Andes (UTEA), perteneciente a 
-        a Escuela Profesional de Ingeniería de Sistemas e Informática, donde actualmente curso el XI semestre de mi formación académica.
-        En el presente ciclo académico llevo el curso de Computación Gráfica, el cual tiene como objetivo principal el estudio
-        de técnicas y herramientas para la representación visual de objetos, tanto en entornos bidimensionales como tridimensionales,
-        utilizando tecnologías modernas de programación y diseño.
-        El presente portafolio ha sido elaborado con la finalidad de recopilar, organizar y presentar de manera estructurada
-        los diferentes ejercicios, prácticas y proyectos desarrollados a lo largo del curso.
+        Soy estudiante de la Universidad Tecnológica de los Andes (UTEA), perteneciente a la Escuela Profesional de Ingeniería de Sistemas e Informática, donde actualmente curso el XI semestre de mi formación académica.
+        Durante mi trayectoria universitaria he desarrollado competencias en el análisis, diseño y desarrollo de soluciones tecnológicas, así como en el uso de herramientas informáticas aplicadas a distintos contextos.
+
+        En el presente ciclo académico llevo el curso de Computación Gráfica, el cual tiene como objetivo principal el estudio de técnicas y herramientas para la representación visual de objetos, tanto en entornos bidimensionales como tridimensionales.
+
+        El presente portafolio ha sido elaborado con la finalidad de recopilar, organizar y presentar de manera estructurada los diferentes ejercicios, prácticas y proyectos desarrollados a lo largo del curso, evidenciando así los conocimientos adquiridos y el desarrollo de habilidades en diseño y programación gráfica.
         </p>
     </div>
 </section>
@@ -198,7 +239,7 @@ footer{
         <div class="grid">
 
             <div class="card">
-                <h3>Documento Word</h3>
+                <h3>Monografía Documento Word</h3>
                 <a href="ACTIVIDAD N°6.docx">Descargar</a>
             </div>
 
