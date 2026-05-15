@@ -2,10 +2,13 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <title>Sombreado y Texturizado de Objetos 3D</title>
  
-<!-- importmap: ES Modules correctos para Three.js r158 — funciona en file://, GitHub Pages, etc. -->
+<!-- ES Module Shims: hace que importmap funcione en iOS Safari < 16.4 -->
+<script async src="https://cdn.jsdelivr.net/npm/es-module-shims@1.8.3/dist/es-module-shims.js"></script>
 <script type="importmap">
 {
   "imports": {
@@ -245,6 +248,202 @@
     margin:16px 0 10px; padding-bottom:6px;
     border-bottom:1px solid rgba(124,58,237,.3);
   }
+
+  /* ══════════════════════════════════════════
+     PANEL TOGGLE FAB — always visible
+  ══════════════════════════════════════════ */
+  #panel-fab {
+    position: fixed;
+    bottom: 24px;
+    right: calc(var(--panel-w) + 14px);
+    z-index: 300;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(0,212,255,.15), rgba(124,58,237,.2));
+    border: 1.5px solid var(--accent1);
+    color: var(--accent1);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 0 20px rgba(0,212,255,.4), 0 2px 14px rgba(0,0,0,.6);
+    transition: right .35s cubic-bezier(.4,0,.2,1), background .2s, transform .2s;
+    backdrop-filter: blur(8px);
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    user-select: none;
+    --panel-w: 340px; /* fallback */
+  }
+  #panel-fab:hover {
+    background: linear-gradient(135deg, rgba(0,212,255,.3), rgba(124,58,237,.35));
+    box-shadow: 0 0 30px rgba(0,212,255,.6), 0 2px 18px rgba(0,0,0,.6);
+    transform: scale(1.1);
+  }
+  #panel-fab:active { transform: scale(.92); }
+
+  /* Tooltip */
+  #panel-fab::after {
+    content: attr(data-tip);
+    position: absolute;
+    right: 52px;
+    background: rgba(6,12,26,.96);
+    border: 1px solid var(--border);
+    color: var(--accent1);
+    font-family: 'Orbitron', sans-serif;
+    font-size: .46rem; letter-spacing: .08em;
+    white-space: nowrap;
+    padding: 4px 9px; border-radius: 6px;
+    opacity: 0; pointer-events: none;
+    transition: opacity .2s;
+  }
+  #panel-fab:hover::after { opacity: 1; }
+
+  /* Icon flip on hidden */
+  #panel-fab svg { width: 18px; height: 18px; transition: transform .35s; }
+
+  /* ── Panel hidden state ── */
+  body.panel-hidden #panel-fab {
+    right: 14px;
+  }
+  body.panel-hidden #panel-fab svg { transform: scaleX(-1); }
+
+  /* Smooth panel slide out */
+  #panel {
+    transition: transform .35s cubic-bezier(.4,0,.2,1);
+  }
+  body.panel-hidden #panel {
+    transform: translateX(100%);
+  }
+
+  /* Canvas + corners + fps expand when panel hidden (desktop) */
+  #canvas-container {
+    transition: right .35s cubic-bezier(.4,0,.2,1);
+  }
+  body.panel-hidden #canvas-container {
+    right: 0;
+  }
+  body.panel-hidden .corner-tr { right: 4px; }
+  body.panel-hidden .corner-br { right: 4px; }
+  body.panel-hidden #fps       { right: 56px; }
+
+  /* ══════════════════════════════════════════
+     MOBILE RESPONSIVE (≤ 700px)
+  ══════════════════════════════════════════ */
+  @media (max-width: 700px) {
+    :root {
+      --panel-w: 0px;
+    }
+
+    /* Header shrinks */
+    #header {
+      height: 50px;
+      padding: 0 12px;
+    }
+    #header h1 { font-size: clamp(.52rem,3.5vw,.78rem); letter-spacing:.04em; }
+    #header .subtitle { display: none; }
+
+    /* Canvas: full width, leaves room for bottom nav */
+    #canvas-container {
+      right: 0 !important;
+      top: 50px;
+      bottom: 50px;
+    }
+
+    /* Panel slides up from bottom as a drawer */
+    #panel {
+      position: fixed;
+      top: auto !important;
+      left: 0; right: 0; bottom: 0;
+      width: 100%;
+      height: 62vh;
+      border-left: none;
+      border-top: 1.5px solid var(--accent1);
+      border-radius: 18px 18px 0 0;
+      transform: translateY(100%);
+      box-shadow: 0 -8px 40px rgba(0,212,255,.15);
+    }
+    #panel.drawer-open {
+      transform: translateY(0) !important;
+    }
+    /* Panel hidden always = closed drawer on mobile */
+    body.panel-hidden #panel {
+      transform: translateY(100%) !important;
+    }
+
+    /* Drag handle at top of drawer */
+    #panel::before {
+      content: '';
+      display: block;
+      width: 40px; height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      margin: 10px auto 2px;
+    }
+
+    /* Mobile bottom navigation bar */
+    #mobile-bottom-nav {
+      display: flex;
+      position: fixed; bottom: 0; left: 0; right: 0;
+      height: 50px;
+      background: rgba(5,10,20,.97);
+      border-top: 1px solid var(--border);
+      z-index: 200;
+    }
+    .mbn-btn {
+      flex: 1;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 2px;
+      background: none; border: none; cursor: pointer;
+      font-family: 'Orbitron', sans-serif; font-size: .43rem; letter-spacing: .07em;
+      color: var(--muted); text-transform: uppercase;
+      transition: color .15s;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      border-top: 2px solid transparent;
+    }
+    .mbn-btn.active { color: var(--accent1); border-top-color: var(--accent1); }
+    .mbn-btn.active .mbn-icon { filter: drop-shadow(0 0 5px var(--accent1)); }
+    .mbn-icon { font-size: 1rem; line-height: 1; }
+
+    /* FAB repositioned on mobile */
+    #panel-fab {
+      display: none; /* replaced by bottom nav on mobile */
+    }
+
+    /* Info box above bottom nav */
+    #info-box {
+      left: 8px; right: 8px;
+      bottom: 58px;
+      max-width: 100%;
+      font-size: .68rem;
+      padding: 9px 12px;
+    }
+
+    /* Tabs inside drawer: bigger touch targets */
+    .tab-btn { padding: 14px 4px; font-size: .5rem; }
+
+    /* FPS inside canvas area */
+    #fps { right: 8px !important; bottom: 58px; }
+
+    /* Hide desktop corners on mobile */
+    .corner { display: none; }
+  }
+
+  /* Very small phones */
+  @media (max-width: 380px) {
+    #header h1 { font-size: .52rem; }
+    .mbn-btn { font-size: .38rem; }
+    .mbn-icon { font-size: .9rem; }
+  }
+
+  /* Tablet (701–900px): narrower panel */
+  @media (min-width: 701px) and (max-width: 900px) {
+    :root { --panel-w: 270px; }
+    #panel-fab { --panel-w: 270px; }
+  }
+
+  /* Hide mobile bottom nav on desktop */
+  @media (min-width: 701px) {
+    #mobile-bottom-nav { display: none !important; }
+  }
 </style>
 </head>
 <body>
@@ -267,14 +466,57 @@
  
 <!-- Header -->
 <div id="header">
-  <div>
+  <!-- Mini icon: cubo 3D holográfico -->
+  <svg width="38" height="38" viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;margin-right:8px" aria-hidden="true">
+    <defs>
+      <radialGradient id="hbg" cx="40%" cy="35%" r="65%">
+        <stop offset="0%" stop-color="#00eeff"/>
+        <stop offset="55%" stop-color="#7c3aed"/>
+        <stop offset="100%" stop-color="#020817"/>
+      </radialGradient>
+      <linearGradient id="hln" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#00d4ff"/>
+        <stop offset="100%" stop-color="#7c3aed"/>
+      </linearGradient>
+    </defs>
+    <!-- Glow circle background -->
+    <circle cx="19" cy="19" r="18" fill="url(#hbg)" opacity=".85"/>
+    <circle cx="19" cy="19" r="18" fill="none" stroke="#00d4ff" stroke-width="1" opacity=".5"/>
+    <!-- Isometric cube faces -->
+    <!-- Top face -->
+    <polygon points="19,5 31,12 19,19 7,12" fill="#00d4ff" opacity=".22"/>
+    <!-- Left face -->
+    <polygon points="7,12 19,19 19,32 7,25" fill="#7c3aed" opacity=".28"/>
+    <!-- Right face -->
+    <polygon points="31,12 31,25 19,32 19,19" fill="#00d4ff" opacity=".14"/>
+    <!-- Cube edges -->
+    <polygon points="19,5 31,12 19,19 7,12" fill="none" stroke="url(#hln)" stroke-width="1.4"/>
+    <polygon points="7,12 19,19 19,32 7,25" fill="none" stroke="url(#hln)" stroke-width="1.4"/>
+    <polygon points="31,12 31,25 19,32 19,19" fill="none" stroke="url(#hln)" stroke-width="1.4"/>
+    <!-- Inner diagonals -->
+    <line x1="19" y1="5"  x2="19" y2="19" stroke="url(#hln)" stroke-width=".9" opacity=".7"/>
+    <line x1="7"  y1="12" x2="19" y2="19" stroke="url(#hln)" stroke-width=".9" opacity=".7"/>
+    <line x1="31" y1="12" x2="19" y2="19" stroke="url(#hln)" stroke-width=".9" opacity=".7"/>
+    <!-- Specular dot -->
+    <circle cx="15" cy="11" r="2.5" fill="white" opacity=".28"/>
+  </svg>
+  <div style="min-width:0;flex:1">
     <h1>SOMBREADO &amp; TEXTURIZADO DE OBJETOS 3D</h1>
     <div class="subtitle">Computación Gráfica · Visualización Interactiva</div>
   </div>
-  <div style="font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--muted)">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--muted);flex-shrink:0">
     <span id="mode-label" style="color:var(--accent1)">PHONG</span> · WebGL 2.0
   </div>
 </div>
+
+<!-- ── PANEL TOGGLE FAB ── -->
+<button id="panel-fab" data-tip="OCULTAR PANEL" onclick="togglePanelFab()" aria-label="Toggle panel">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+    <rect x="3" y="3" width="18" height="18" rx="2"/>
+    <line x1="15" y1="3" x2="15" y2="21"/>
+    <polyline points="11 8 8 12 11 16"/>
+  </svg>
+</button>
  
 <!-- Canvas -->
 <div id="canvas-container"></div>
@@ -489,6 +731,22 @@
   <h3 id="info-title">PHONG SHADING</h3>
   <p id="info-desc">Modelo estándar de iluminación por píxel. Haz clic en cualquier tarjeta del panel para ver información detallada.</p>
 </div>
+
+<!-- Mobile bottom navigation -->
+<nav id="mobile-bottom-nav">
+  <button class="mbn-btn active" id="mbn-shading" onclick="mobileNavTab('shading')">
+    <span class="mbn-icon">💡</span>Sombreado
+  </button>
+  <button class="mbn-btn" id="mbn-textures" onclick="mobileNavTab('textures')">
+    <span class="mbn-icon">🎨</span>Texturas
+  </button>
+  <button class="mbn-btn" id="mbn-controls" onclick="mobileNavTab('controls')">
+    <span class="mbn-icon">⚙️</span>Control
+  </button>
+  <button class="mbn-btn" id="mbn-close" onclick="closeDrawer()">
+    <span class="mbn-icon">✕</span>Cerrar
+  </button>
+</nav>
  
 <div id="fps">FPS: --</div>
  
@@ -508,6 +766,50 @@ let pointLight, dirLight, spotLight, activeLight;
 let stars;
 let fpsCnt = 0, fpsLast = performance.now();
  
+// ─── MOBILE DETECTION ────────────────────────────────────────────
+const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) || window.innerWidth <= 700;
+
+// ─── PANEL FAB TOGGLE (desktop) ───────────────────────────────────
+window.togglePanelFab = function() {
+  const hidden = document.body.classList.toggle('panel-hidden');
+  const fab = document.getElementById('panel-fab');
+  fab.setAttribute('data-tip', hidden ? 'MOSTRAR PANEL' : 'OCULTAR PANEL');
+  // also resize renderer after transition
+  setTimeout(() => {
+    onResize && onResize();
+  }, 370);
+};
+
+// ─── MOBILE DRAWER ────────────────────────────────────────────────
+window.mobileNavTab = function(tab) {
+  const panel = document.getElementById('panel');
+  const already = panel.classList.contains('drawer-open') && panel.dataset.tab === tab;
+  // toggle: if same tab clicked, close; else open and switch
+  document.querySelectorAll('.mbn-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('mbn-' + tab).classList.add('active');
+  if (already) {
+    panel.classList.remove('drawer-open');
+    panel.dataset.tab = '';
+  } else {
+    panel.classList.add('drawer-open');
+    panel.dataset.tab = tab;
+    switchTab(tab);
+  }
+};
+
+window.closeDrawer = function() {
+  document.getElementById('panel').classList.remove('drawer-open');
+  document.querySelectorAll('.mbn-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('mbn-close').classList.add('active');
+};
+
+// Close drawer when tapping canvas on mobile
+document.getElementById('canvas-container').addEventListener('pointerdown', () => {
+  if (window.innerWidth <= 700) {
+    document.getElementById('panel').classList.remove('drawer-open');
+  }
+});
+
 // ─── INIT ─────────────────────────────────────────────────────────
 function init() {
   const container = document.getElementById('canvas-container');
@@ -517,15 +819,23 @@ function init() {
   scene.background = new THREE.Color(0x060c1a);
   // No fog — it was darkening the object too much
  
-  // Camera
+  // Camera — alejada en mobile para que el objeto no tape la pantalla
+  const _isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+                 (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const _camZ  = (isMobile || _isIOS) ? 7.5 : 4.5;  // más lejos en móvil
   camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 500);
-  camera.position.set(0, 1.5, 4.5);
+  camera.position.set(0, 1.2, _camZ);
  
-  // Renderer
-  renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  // Renderer — adaptado para iOS/Android
+  const _isMobAny = isMobile || _isIOS;
+  renderer = new THREE.WebGLRenderer({
+    antialias: !_isMobAny,
+    powerPreference: 'high-performance',
+    precision: _isMobAny ? 'mediump' : 'highp',
+  });
+  renderer.setPixelRatio(_isMobAny ? Math.min(window.devicePixelRatio, 1.5) : Math.min(window.devicePixelRatio, 2));
   renderer.setSize(container.clientWidth, container.clientHeight);
-  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.enabled = !_isMobAny;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -952,6 +1262,7 @@ window.selectTexture = function(type) {
   document.querySelectorAll('#tab-textures .card').forEach(c => c.classList.remove('selected'));
   event.currentTarget.classList.add('selected');
   applyTexture(type);
+  updateInfoTex(type);
 };
  
 function applyTexture(type) {
@@ -1120,6 +1431,26 @@ const INFO = {
   pbr:     { title:'PBR — PHYSICALLY BASED', desc:'BRDF basada en microfacetas. Metalicidad y rugosidad controlan las propiedades del material de forma física y consistente bajo cualquier iluminación.' },
 };
  
+// Info box — texturas
+const INFO_TEX = {
+  color:       { title:'DIFFUSE MAP · ALBEDO',     desc:'Textura base de color pura, sin cálculo de iluminación. Define el color "real" de la superficie antes de aplicar luces y sombras.' },
+  checker:     { title:'CHECKER PROCEDURAL',        desc:'Cuadrícula generada matemáticamente, sin imagen fuente. Infinitamente escalable sin pixelado. Glow neón en bordes mediante radialGradient.' },
+  gradient:    { title:'DEGRADADO UV',              desc:'Los canales R y G codifican las coordenadas U y V del mapeo de textura. Herramienta clave para depurar el unwrap UV de cualquier modelo.' },
+  wireframe:   { title:'MALLA POLIGONAL',           desc:'Muestra la estructura geométrica pura: aristas, vértices y triángulos. Permite analizar la densidad de polígonos y el flujo de la topología.' },
+  emissive:    { title:'MATERIAL EMISIVO',          desc:'Superficie que emite luz propia independientemente de la iluminación de la escena. Simula LEDs, pantallas, lava o cualquier fuente de luz autónoma.' },
+  metal:       { title:'METAL RAYADO · PBR',        desc:'Metalness 1.0 con mapa de rugosidad procedural. Estrías horizontales simulan acero cepillado. El roughnessMap controla el reflejo de forma no uniforme.' },
+  wood:        { title:'MADERA PROCEDURAL',         desc:'Anillos concéntricos generados con seno + ruido sobre la distancia al centro. Simula la veta real de la madera sin ninguna imagen fuente.' },
+  marble:      { title:'MÁRMOL PROCEDURAL',         desc:'Vetas creadas con turbulencia sinusoidal en 5 octavas. El patrón es continuo e infinito. Ajustando la frecuencia se obtiene desde mármol fino hasta jaspe.' },
+  displacement:{ title:'BUMP MAP · RELIEVE',        desc:'Mapa de alturas sinusoidal aplicado como bumpMap. Perturba las normales por píxel para simular relieve visual sin modificar la geometría real del modelo.' },
+};
+
+function updateInfoTex(type) {
+  const i = INFO_TEX[type];
+  if (!i) return;
+  document.getElementById('info-title').textContent = i.title;
+  document.getElementById('info-desc').textContent  = i.desc;
+}
+
 function updateInfo(mode) {
   const i = INFO[mode] || INFO.phong;
   document.getElementById('info-title').textContent = i.title;
